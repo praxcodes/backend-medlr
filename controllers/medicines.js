@@ -1,9 +1,55 @@
+const { query } = require('express')
 const Medicine=require('../models/Medicine')
 
 const getAllMedicines =async(req,res)=>{
     try {
-       const medicines= await Medicine.find({})
-        res.status(200).json({medicines:medicines})
+        
+        const {name,manufacturer,numericFilters,sort}=req.query
+        
+        const queryObject={}
+        
+        if(name){
+            queryObject.name={$regex:name, $options:'i'}
+        }
+        if(manufacturer){
+            queryObject.manufacturer={$regex: manufacturer, $options: 'i'}
+        }
+        if(numericFilters){
+            const operatorMap={
+                '>':'$gt',
+                '>=':'$gte',
+                '=':'$eq',
+                '<':'$lt',
+                '<=':'$lte',
+             }
+             const regEx=/\b(<|>|<=|>=|=)\b/g
+             let filters=numericFilters.replace(regEx,(match)=>`-${operatorMap[match]}-` )
+             const options=['price','quantity','discountPrice'];
+             filters=filters.split(',').forEach((item)=>{
+                const [field,operator,value]=item.split('-')
+                if(options.includes(field)){
+                    queryObject[field]={[operator]:Number(value)}
+                }
+             })
+        }
+
+
+
+
+        //console.log(queryObject)
+        
+       let result= Medicine.find(queryObject)
+       
+       if(sort){
+        const sortList= sort.split(',').join(' ')
+        result=result.sort(sortList)
+       }
+       else{
+        result=result.sort('name')
+       }
+        
+       const medicines=await result
+        res.status(200).json({medicines})
     } catch (error) {
         res.status(500).json({msg: error})
     }
@@ -61,7 +107,7 @@ try {
     res.status(200).json({medicine})
     
 } catch (error) {
-    
+    res.status(500).json({msg : error})
 }
 }
 
