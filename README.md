@@ -86,5 +86,9 @@ json
     "price":1000
 }
 
+DELETE
 
+Delete Medicine
+
+{{URL}}/medicines/66a3a11a4e164cc61f5f85ee
    
