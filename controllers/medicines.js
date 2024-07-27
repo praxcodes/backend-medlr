@@ -1,4 +1,5 @@
 const { query } = require('express')
+
 const Medicine=require('../models/Medicine')
 
 const getAllMedicines =async(req,res)=>{
@@ -49,6 +50,7 @@ const getAllMedicines =async(req,res)=>{
        }
         
        const medicines=await result
+       
         res.status(200).json({medicines})
     } catch (error) {
         res.status(500).json({msg: error})

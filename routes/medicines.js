@@ -1,5 +1,6 @@
 const express=require('express')
 const router = express.Router()
+const {redisCacheMiddleware}=require('../middleware/redis')
 
 const {
     getAllMedicines,
@@ -9,7 +10,7 @@ const {
     deleteMedicine,
 } =require('../controllers/medicines')
 
-router.route('/').get(getAllMedicines).post(createMedicine)
+router.route('/').get(redisCacheMiddleware(),getAllMedicines).post(createMedicine)
 router.route('/:id').get(getMedicine).patch(updateMedicine).delete(deleteMedicine)
 
 module.exports=router
