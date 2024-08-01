@@ -77,7 +77,7 @@
 }
 ```
 ### **5. Delete Medicine**
-- ### **URL:*8 {{URL}}/medicines/:id
+- ### **URL:** {{URL}}/medicines/:id
   - #### Example Usage:
      ```
      {{URL}}/medicines/66a3a11a4e164cc61f5f85ee 
