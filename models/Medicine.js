@@ -1,31 +1,30 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const MedicineSchema= new mongoose.Schema({
-    name:{
+// Define the schema for the Medicine model
+const MedicineSchema = new mongoose.Schema({
+    name: {
         type: String,
-        required:[true,'must provide name']
-
+        required: [true, 'must provide name'] // Name is required
     },
-    price:{
+    price: {
         type: Number,
-        required: [true,'must provide price']
+        required: [true, 'must provide price'] // Price is required
     },
-    discountPrice:{
+    discountPrice: {
+        type: Number, // Discounted price is optional
+    },
+    quantity: {
         type: Number,
-
+        required: [true, 'must provide quantity'] // Quantity is required
     },
-    quantity:{
-        type: Number,
-        required: [true,'must provide quantty']
-    },
-    manufacturer:{
+    manufacturer: {
         type: String,
-        required:[true,'must provide manufacturer']
+        required: [true, 'must provide manufacturer'] // Manufacturer is required
     },
-    imageUrl:{
-        type: String,
+    imageUrl: {
+        type: String, // Image URL is optional
     },
+});
 
-})
-
-module.exports= mongoose.model('Medicine',MedicineSchema)
+// Create the Medicine model from the schema
+module.exports = mongoose.model('Medicine', MedicineSchema);
