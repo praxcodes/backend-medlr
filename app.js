@@ -1,40 +1,40 @@
-const express= require('express');
+const express = require('express'); // Import the Express library
 
-const medicines=require('./routes/medicines');
-const connectDB= require('./db/connect');
-require('dotenv').config();
-const notFound=require('./middleware/not-found')
-const redis= require('redis')
-const {initialiseRedisClient}= require("./middleware/redis")
+const medicines = require('./routes/medicines'); // Import the medicines routes
+const connectDB = require('./db/connect'); // Import the database connection function
+require('dotenv').config(); // Load environment variables from a .env file
+const notFound = require('./middleware/not-found'); // Import the 404 middleware
+const redis = require('redis'); // Import the Redis library
+const { initialiseRedisClient } = require('./middleware/redis'); // Import the Redis initialization function
 
-//middleware
-async function initialiseExpress(){
-    const app=express();
-    app.use(express.json())
+// Middleware
+async function initialiseExpress() {
+    const app = express(); // Create an Express application
+    app.use(express.json()); // Middleware to parse JSON request bodies
 
-    await initialiseRedisClient();
-    app.use('/api/v1/medicines', medicines);
-    app.use(notFound)//handles not-found 404 error
-    const port=process.env.port || 3000;
+    await initialiseRedisClient(); // Initialize the Redis client
+    app.use('/api/v1/medicines', medicines); // Use the medicines routes
+    app.use(notFound); // Middleware to handle 404 errors
 
-//connecting to db
-const start=async()=>{
-    try {
-        await connectDB(process.env.MONGO_URI);
-        app.listen(port,()=>
-            console.log(`Server is listening on port ${port}...`)
-        )
-        
-    } catch (error) {
-        console.log(error);
-    }
-};
-start();
+    const port = process.env.port || 3000; // Define the port from environment variables or default to 3000
+
+    // Function to start the server and connect to the database
+    const start = async () => {
+        try {
+            await connectDB(process.env.MONGO_URI); // Connect to the MongoDB database
+            app.listen(port, () =>
+                console.log(`Server is listening on port ${port}...`)
+            );
+        } catch (error) {
+            console.log(error); // Log any errors
+        }
+    };
+
+    start(); // Start the server
 }
 
+// Initialize the Express application
 initialiseExpress()
-.then()
-.catch((e)=>console.log(e))
-
-
+    .then()
+    .catch((e) => console.log(e)); // Log any errors during initialization
 
